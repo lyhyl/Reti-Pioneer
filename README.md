@@ -4,7 +4,7 @@
 
 Low-Cost Pre-Trained Oculomics Models for Multimorbidity Detection and Prediction
 
-For more information, please visit our [website](www.retipioneer.cn).
+For more information, please visit our [website](https://www.retipioneer.cn).
 
 ## News
 
