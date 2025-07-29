@@ -1,13 +1,14 @@
 from typing import List
+
 import torch
 import torch.nn as nn
 
 
-def get_reti_pioneer(backbone: nn.Module, backbone_output_size: int, n_meta: int):
+def get_reti_pioneer(backbone: nn.Module, backbone_output_size: int, n_meta: int, flip_r: bool=False):
     mid_size = 256
     fuse_dim = 256
     model = nn.Sequential(
-        FuseBase(backbone, backbone_output_size, n_meta, mid_size, fuse_dim, flip_r=False),
+        FuseBase(backbone, backbone_output_size, n_meta, mid_size, fuse_dim, flip_r=flip_r),
         nn.SiLU(True),
         nn.Linear(mid_size, 1)
     )

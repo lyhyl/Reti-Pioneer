@@ -1,8 +1,8 @@
 import os
-from typing import Callable, List, Literal, Union
+from typing import Callable, List, Literal
 
-import torch
 import numpy as np
+import torch
 from skimage import draw
 from torch.utils.data import Subset, random_split
 from torchvision.transforms import Compose
@@ -13,8 +13,8 @@ class UKBDatasetFast:
                  path: str,
                  transform: Compose = None,
                  meta: List[str] = [],
-                 y: Literal[0, 1, 3, 5, 10] = 0,
-                 disease: List[int] = list(range(12)),
+                 y: Literal[0, 5, 10] = 0,
+                 disease: List[int] | List[str] = list(range(6)),
                  incident_exclude_prior: bool = True,
                  use_pretrain: Literal["RETF", "VimS", "VimT", "SwinB"] | None = None,
                  prefilter: Callable[["UKBDatasetFast"], np.ndarray] = lambda ds: ~np.isnan(ds.center),
@@ -64,11 +64,11 @@ class UKBDatasetFast:
         self.center: np.ndarray = data["center"]
         del data
 
-        for i in [0, 1, 3, 5, 10]:
+        for i in [0, 5, 10]:
             data = np.load(os.path.join(path, f"UKB_y{i}.npz"))
             self.__setattr__(f"y{i}", data["y"])
             del data
-        self.ys: List[np.ndarray] = [self.__getattribute__(f"y{i}") for i in [0, 1, 3, 5, 10]]
+        self.ys: List[np.ndarray] = [self.__getattribute__(f"y{i}") for i in [0, 5, 10]]
         self.prior_health = self.ys[0] == 0
 
         self.transform = transform
@@ -80,11 +80,11 @@ class UKBDatasetFast:
 
         self.disease_names = ["t2dm", "thyroid", "osteoporosis", "gout", "hyperlipemia", "hypertension"]
 
-    def set_target(self, y: Literal[0, 1, 3, 5, 10], disease: List[int] | List[str], incident_exclude_prior: bool = True):
+    def set_target(self, y: Literal[0, 5, 10], disease: List[int] | List[str], incident_exclude_prior: bool = True):
         if isinstance(disease[0], str):
             disease = [self.disease_names.index(n) for n in disease]
         self.disease = disease
-        self.yy = self.ys[[0, 1, 3, 5, 10].index(y)]
+        self.yy = self.ys[[0, 5, 10].index(y)]
         filter_init = self.prefilter(self)
         if incident_exclude_prior and y > 0:
             idx = filter_init

@@ -16,7 +16,7 @@ Low-Cost Pre-Trained Oculomics Models for Multimorbidity Detection and Predictio
 
 ## Train and test
 
-just run `python main.py`
+- Run `python main.py`
 
 ## Citation
 

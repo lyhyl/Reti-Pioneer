@@ -13,8 +13,6 @@ from ignite.engine import Engine, Events, create_supervised_evaluator, create_su
 from ignite.handlers import CosineAnnealingScheduler, StepStateScheduler, create_lr_scheduler_with_warmup
 from ignite.handlers.stores import EpochOutputStore
 from ignite.metrics import Accuracy, Loss
-from libauc.losses import AUCMLoss
-from libauc.optimizers import PESG
 from torch.optim import SGD, Adam, AdamW
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import WeightedRandomSampler
@@ -40,7 +38,6 @@ def single_fastds_run(model: nn.Module,
                       save_prob: bool = False,
                       eval_train: bool = False,
                       **args):
-    whole_py = None
     loss = nn.BCEWithLogitsLoss()
     
     optim = AdamW(model.parameters(), lr, betas=args.get("betas", (0.9, 0.999)), weight_decay=args.get("weight_decay", 0.01))
