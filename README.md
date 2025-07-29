@@ -1,6 +1,10 @@
 # Reti-Pioneer
 
+![img](figures/logo.png)
+
 Low-Cost Pre-Trained Oculomics Models for Multimorbidity Detection and Prediction
+
+For more information, please visit our [website](www.retipioneer.cn).
 
 ## News
 
