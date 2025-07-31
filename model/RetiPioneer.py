@@ -3,6 +3,8 @@ from typing import List
 import torch
 import torch.nn as nn
 
+from model.QualityAware import QualityAware
+
 
 def get_reti_pioneer(backbone: nn.Module, backbone_output_size: int, n_meta: int, flip_r: bool=False):
     mid_size = 256
@@ -29,22 +31,8 @@ class FuseBase(nn.Module):
 
         self.base = base
         self.fuse_dim = fuse_dim
-
-        self.enable_q = enable_q
-        if self.enable_q:
-            self.q_fc = nn.Linear(3, 1)
-            if not learnable_q:
-                self.q_fc.requires_grad_(False)
-                self.q_fc.weight[0, 0] = 1
-                self.q_fc.weight[0, 1] = .5
-                self.q_fc.weight[0, 2] = 0
-                self.q_fc.bias[0] = 0
-            self.q_fuse = nn.Bilinear(base_out_size + 1, 2, self.fuse_dim, False)
-            self.post_q = nn.Sequential(nn.SELU(True), nn.Linear(self.fuse_dim, self.fuse_dim))
-        else:
-            self.pre_m = nn.Sequential(nn.SELU(True), nn.Linear(base_out_size, self.fuse_dim))
+        self.quality_aware = QualityAware(base_out_size, self.fuse_dim, enable_q, learnable_q)
         self.m_fuse = nn.Bilinear(self.fuse_dim * 2 + 1, meta_size + 1, num_classes, False)
-
         self.flip_r = flip_r
 
     def forward(self, xmq: List[torch.Tensor]) -> torch.Tensor:
@@ -60,13 +48,7 @@ class FuseBase(nn.Module):
         xqf2 = [torch.ones(bat, 1, device=dev)]
         for x, q in zip(lr, qs):
             xf = self.base(x)
-            if self.enable_q:
-                xf = torch.cat([torch.ones(bat, 1, device=dev), xf], dim=1)
-                q = torch.cat([torch.ones(bat, 1, device=dev), self.q_fc(q)], dim=1)
-                xqf = self.q_fuse(xf, q)
-                xqf2.append(self.post_q(xqf))
-            else:
-                xqf2.append(self.pre_m(xf))
+            xqf2.append(self.quality_aware(xf, q))
         xqf2 = torch.cat(xqf2, dim=1)
         m = torch.cat([torch.ones(bat, 1, device=dev), m], dim=1)
         xqmf = self.m_fuse(xqf2, m)

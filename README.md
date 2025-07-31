@@ -16,7 +16,7 @@ For more information, please visit our [website](https://www.retipioneer.cn).
 
 ## Data
 
-- [UK Biobank](https://www.ukbiobank.ac.uk/) is used for training in this study.
+- [UK Biobank](https://www.ukbiobank.ac.uk/) and tertiary hospital centres in China are used for training and fine-tuning in this study.
 
 ## Train and test
 
