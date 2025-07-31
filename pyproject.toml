@@ -1,7 +1,7 @@
 [project]
 name = "reti-pioneer"
 version = "0.1.0"
-description = "Low-Cost Pre-Trained Oculomics Models for Multimorbidity Detection and Prediction"
+description = "From Oculomics to Clinical Practice: A Low-Cost AI Framework for Multimorbidity Detection via Retinal Imaging"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

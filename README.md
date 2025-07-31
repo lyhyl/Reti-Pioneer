@@ -2,7 +2,7 @@
 
 ![img](figures/logo.png)
 
-Low-Cost Pre-Trained Oculomics Models for Multimorbidity Detection and Prediction
+From Oculomics to Clinical Practice: A Low-Cost AI Framework for Multimorbidity Detection via Retinal Imaging
 
 For more information, please visit our [website](https://www.retipioneer.cn).
 
