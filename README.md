@@ -45,6 +45,7 @@ Installation will take a few minutes on machines with good internet connection s
 python main.py
 ```
 The training will take a few minutes on machines with a consumer-grade GPU.
+The trained model will be saved to `ckpt` folder.
 
 ### Inference
 
