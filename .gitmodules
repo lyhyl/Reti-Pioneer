@@ -1,3 +1,6 @@
 [submodule "RETFound_MAE"]
 	path = RETFound_MAE
 	url = https://github.com/rmaphoh/RETFound_MAE
+[submodule "EyeQ"]
+	path = EyeQ
+	url = https://github.com/HzFu/EyeQ.git

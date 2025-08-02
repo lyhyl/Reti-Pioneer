@@ -32,7 +32,7 @@ class UKBDatasetFast:
             self.xr[:, :, self.mask == 1] = 0
             del data
         elif use_pretrain == "RETF":
-            data = np.load(os.path.join(path, "UKB_RETFound_IN.npz"))
+            data = np.load(os.path.join(path, "UKB_RETF.npz"))
             self.xl: np.ndarray = data["left"]
             self.xr: np.ndarray = data["right"]
             del data

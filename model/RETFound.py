@@ -13,7 +13,7 @@ def get_RETFound_model():
             super().__init__(global_pool, **kwargs)
 
         def forward_head(self, x: torch.Tensor, pre_logits: bool = False) -> torch.Tensor:
-            x = x.squeeze()
+            x = x.view(1, -1)
             return x
 
     def vit_large_patch16_no_head(**kwargs):

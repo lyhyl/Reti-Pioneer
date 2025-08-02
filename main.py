@@ -22,7 +22,7 @@ def main(fast: bool):
         dataset = UKBDatasetFast("data/UKBCompressed", None, clinic_variables, disease=[0], use_pretrain="RETF")
         get_backbone = nn.Identity
     else:
-        trans = Compose([ToPILImage(), ToTensor(), Normalize(0.3, 0.3, 0.3)])
+        trans = Compose([ToPILImage(), ToTensor(), Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
         dataset = UKBDatasetFast("data/UKBCompressed", trans, clinic_variables, disease=[0], use_pretrain=None)
         get_backbone = get_RETFound_model
 
