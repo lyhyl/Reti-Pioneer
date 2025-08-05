@@ -39,6 +39,9 @@ def main():
 
     # Clinical Variables
     meta = torch.ones(1, 3, device=device)
+    mmean = torch.tensor([5.66064740e+01, 5.00000000e-01, 78.04054385447546], device=device)
+    mstd = torch.tensor([8.15334413e+00, 5.00000000e-01, 15.985435090239642], device=device)
+    meta = (meta - mmean) / mstd
 
     # Qualities
     eyeq = dense121_mcs(3)
@@ -46,7 +49,7 @@ def main():
     # https://1drv.ms/u/s!ArBRrL8ao6jznU6RCbo60oStjPWZ?e=qQmzST
     eyeq_pretrain = torch.load(r"EyeQ/MCF_Net/result/DenseNet121_v3_v1.tar")
     eyeq.load_state_dict(eyeq_pretrain['state_dict'])
-    eyeq.to(device)
+    eyeq = eyeq.to(device)
     cs = [[v.unsqueeze(0).to(device) for v in eyeq_prep(x)] for x in xs]
     qs = [eyeq(*c)[4] for c in cs]
 
@@ -55,9 +58,9 @@ def main():
     model_pretrain = torch.load(r"results/model_pretrain.pth")
     model.load_state_dict(model_pretrain['state_dict'])
     model = model.to(device)
-    y: torch.Tensor = F.sigmoid(model(((cs[0][0], cs[1][0]), meta, qs)))
+    y = F.sigmoid(model(((cs[0][0], cs[1][0]), meta, qs))).item()
 
-    print(y.detach().cpu().numpy())
+    print(y)
 
 
 if __name__ == "__main__":
