@@ -18,17 +18,6 @@ def _TFPN(cm: torch.Tensor) -> Tuple[torch.Tensor]:
     return TP, TN, FP, FN
 
 
-def _GMean(cm: torch.Tensor, average: bool) -> Union[torch.Tensor, float]:
-    TP, TN, FP, FN = _TFPN(cm)
-    recall = TP / (TP + FN)
-    spec = TN / (FP + TN)
-    gmean = torch.sqrt(torch.mul(recall, spec))
-    if average:
-        return torch.mean(gmean).item()
-    else:
-        return gmean
-
-
 def _SEN(cm: torch.Tensor, average: bool) -> Union[torch.Tensor, float]:
     TP, TN, FP, FN = _TFPN(cm)
     sen = TP / (TP + FN)
@@ -65,14 +54,6 @@ def _NPV(cm: torch.Tensor, average: bool) -> Union[torch.Tensor, float]:
         return npv
 
 
-def GMean(num_class: int,
-          average: bool = True,
-          output_transform: Callable = lambda x: x,
-          device: Union[str, torch.device] = torch.device("cpu")) -> ignite.metrics.MetricsLambda:
-    cm = ignite.metrics.ConfusionMatrix(num_class, None, output_transform, device)
-    return ignite.metrics.MetricsLambda(_GMean, cm, average)
-
-
 def SEN(num_class: int,
         average: bool = True,
         output_transform: Callable = lambda x: x,
@@ -103,16 +84,6 @@ def NPV(num_class: int,
         device: Union[str, torch.device] = torch.device("cpu")) -> ignite.metrics.MetricsLambda:
     cm = ignite.metrics.ConfusionMatrix(num_class, None, output_transform, device)
     return ignite.metrics.MetricsLambda(_NPV, cm, average)
-
-
-def BGMean(
-        average: bool = True,
-        device: Union[str, torch.device] = torch.device("cpu")) -> ignite.metrics.MetricsLambda:
-    pass
-
-
-def ErrorRatio() -> ignite.metrics.MetricsLambda:
-    return ignite.metrics.MeanAbsoluteError()
 
 
 def sensitivity_score_compute_fn(y_preds: torch.Tensor, y_targets: torch.Tensor) -> float:

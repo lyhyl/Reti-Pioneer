@@ -8,12 +8,12 @@ import torch.nn.functional as F
 from ignite.contrib.handlers import TensorboardLogger, global_step_from_engine
 from ignite.contrib.handlers.tensorboard_logger import OptimizerParamsHandler
 from ignite.contrib.handlers.tqdm_logger import ProgressBar
-from ignite.contrib.metrics.roc_auc import ROC_AUC, RocCurve
+from ignite.contrib.metrics.roc_auc import ROC_AUC
 from ignite.engine import Engine, Events, create_supervised_evaluator, create_supervised_trainer
-from ignite.handlers import CosineAnnealingScheduler, StepStateScheduler, create_lr_scheduler_with_warmup
+from ignite.handlers import CosineAnnealingScheduler, create_lr_scheduler_with_warmup
 from ignite.handlers.stores import EpochOutputStore
 from ignite.metrics import Accuracy, Loss
-from torch.optim import SGD, Adam, AdamW
+from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import WeightedRandomSampler
 
@@ -40,7 +40,7 @@ def single_fastds_run(model: nn.Module,
                       **args):
     loss = nn.BCEWithLogitsLoss()
     
-    optim = AdamW(model.parameters(), lr, betas=args.get("betas", (0.9, 0.999)), weight_decay=args.get("weight_decay", 0.01))
+    optim = AdamW(model.parameters(), lr, weight_decay=args.get("weight_decay", 0.01))
     scheduler = CosineAnnealingScheduler(optim, "lr", lr, 0.0, epochs // epochs_factor)
     scheduler = create_lr_scheduler_with_warmup(scheduler, warmup_lr, warmup_epochs)
 
@@ -58,7 +58,7 @@ def single_fastds_run(model: nn.Module,
     valid_loader = DataLoader(vds, batch_size=bs, shuffle=False, pin_memory=False)
     test_loaders = [DataLoader(xds, batch_size=bs, shuffle=False, pin_memory=False) for xds in xdss]
 
-    skip_vds = np.vstack([y for l, r, m, q, y in vds]).max() == 0
+    skip_vds = max([y for l, r, m, q, y in vds]) == 0
 
     trainer = create_supervised_trainer(
         model, optim, loss, device,
@@ -107,10 +107,11 @@ def single_fastds_run(model: nn.Module,
             validator.run(valid_loader)
             if save_prob:
                 save_py(validator.state.py, os.path.join(tbdir, "ckpt", f"py_{engine.state.epoch}_val.npz"))
-        for i, (tester, test_loader) in enumerate(zip(testers, test_loaders)):
-            tester.run(test_loader)
-            if save_prob:
-                save_py(tester.state.py, os.path.join(tbdir, "ckpt", f"py_{engine.state.epoch}_test{i}.npz"))
+        if engine.state.epoch >= warmup_epochs + epochs - 2:
+            for i, (tester, test_loader) in enumerate(zip(testers, test_loaders)):
+                tester.run(test_loader)
+                if save_prob:
+                    save_py(tester.state.py, os.path.join(tbdir, "ckpt", f"py_{engine.state.epoch}_test{i}.npz"))
 
     os.makedirs(tbdir, exist_ok=True)
     tb_logger = TensorboardLogger(log_dir=tbdir)

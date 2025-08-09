@@ -20,9 +20,17 @@ For more information, please visit our [website](https://www.retipioneer.cn).
 
 - [UK Biobank](https://www.ukbiobank.ac.uk/) and tertiary hospital centres in China are used for training and fine-tuning in this study.
 - We recommend preprocessing the data to accelerate the training process in the following ways (N, M and D denote the numbuer of samples, clinical variables and diseases):
-    - Use RETFound to extract the deep features and save it to `UKB_RETF.npz` with format `{"left": N x 1024 numpy array, "right": N x 1024 numpy array}`
-    - Save the clinical variables, quality scores, and center ID to `UKB_mqd.npz` with format `{"m": N x M clinical variables, "mn": N clinical variable names, "ql": N x 3 left quality scores, "qr": N x 3 right quality scores, "center": N center IDs}`.
-    - Save diseases information to `UKB_y{n}.npz` with format `{"y": N x D numpy array}`.
+    - Use RETFound to extract the deep features and save it to `UKB_RETF.npz` with format
+        - "left": N x 1024 numpy array
+        - "right": N x 1024 numpy array
+    - Save the clinical variables, quality scores, and center ID to `UKB_mqd.npz` with format
+        - "m": N x M clinical variables
+        - "mn": N clinical variable names
+        - "ql": N x 3 left quality scores
+        - "qr": N x 3 right quality scores
+        - "center": N center IDs
+    - Save diseases information to `UKB_y{n}.npz` with format
+        - "y": N x D numpy array
 - Place preprocessed data (`UKB_RETF.npz`, `UKB_mqd.npz` and `UKB_y{n}.npz`) on `data/UKBCompressed` or specify the path in code.
 - A small example is provide in `data/UKBCompressed`.
 
