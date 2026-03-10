@@ -1,0 +1,41 @@
+[project]
+name = "reti-pioneer"
+version = "0.1.0"
+description = "From Oculomics to Clinical Practice: A Low-Cost AI Framework for Multimorbidity Detection via Retinal Imaging"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "causal-conv1d",
+    "huggingface-hub[cli]>=0.34.3",
+    "imbalanced-learn>=0.13.0",
+    "mamba-ssm",
+    "pytorch-ignite>=0.5.2",
+    "scikit-image>=0.25.2",
+    "tensorboardx>=2.6.4",
+    "timm==0.9.2",
+    "torch==2.8",
+    "torchvision>=0.22.1",
+    "tqdm>=4.67.1",
+]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu128" },
+]
+torchvision = [
+  { index = "pytorch-cu128" },
+]
+mamba-ssm = { path = "../../wheel/mamba_ssm-1.1.1-cp312-cp312-linux_x86_64.whl" }
+causal-conv1d = { path = "../../wheel/causal_conv1d-1.4.0-cp312-cp312-linux_x86_64.whl" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple"
+# url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+# url = "https://mirrors.cloud.tencent.com/pypi/simple"
+# url = "https://mirrors.huaweicloud.com/repository/pypi/simple"
+default = true
