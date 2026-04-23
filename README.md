@@ -46,6 +46,12 @@ uv sync
 ```
 Installation will take a few minutes on machines with good internet connection speeds.
 
+### Data Preparation
+
+Since data from different sources exhibit distinct characteristics, they require different preprocessing methods. We recommend preprocessing all data independently before training or inference. Currently, only resizing (to 224×224) and center cropping are applied during inference; other preprocessing methods (e.g., padding) should be used as needed.
+
+In our training process, for UKB fundus images, we first extract a central 1400×1400 square and then resize it to 224x224. For fundus images from other sources, we pad them into squares before resizing to 224x224.
+
 ### Training
 
 - Run the main script.
