@@ -2,7 +2,7 @@
 
 ![img](figures/logo.png)
 
-AI Framework for Multidisease Detection via Retinal Imaging
+[AI Framework for Multidisease Detection via Retinal Imaging](https://www.nature.com/articles/s41591-026-04359-w)
 
 For more information, please visit our [website](https://www.retipioneer.cn).
 
@@ -70,4 +70,6 @@ python inference.py
 
 ## Citation
 
-TBC: AI Framework for Multidisease Detection via Retinal Imaging
+```
+Zhang, X., Li, Q., Liang, Y. et al. AI framework for multidisease detection via retinal imaging. Nat Med (2026). https://doi.org/10.1038/s41591-026-04359-w
+```
